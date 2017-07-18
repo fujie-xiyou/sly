@@ -1,0 +1,45 @@
+<?php
+include("config.php");
+include("html.php");
+?>
+<title>文件编辑-<?php echo $_GET['filename']; ?></title><body>
+<div id='main'>
+<?php
+$filename=$_GET['filename'];
+$new=$_POST['file'];
+if($new&$filename)
+{
+$new=str_replace("\\","",$new);
+$new=str_replace("《换行》","\r\n",$new);
+$fopen=fopen($filename,"w b");
+echo
+'文件:'.$filename.'<br/>';
+echo fwrite($fopen,$new)?'保存成功':'保存失败';
+fclose($fopen);
+}
+elseif($filename)
+{
+if(file_exists($filename))
+{
+$file=file_get_contents($filename);
+$file=str_replace(array('&','<','>'),array('&amp;','&lt;','&gt;'),$file);
+$file=str_replace("\r\n","《换行》",$file);
+echo "<div id='liu'>文件内容:</div><form action='' method='get'><input name='filename' value='{$filename}' type='hidden'/>
+</form><form action='' method='post'><textarea name='file' rows='7' cols='18' align='lift'>{$file}</textarea><br/>
+<input value='保存' type='submit'>
+<form><br/>《换行》是本系统唯一的一个UBB，它的作用你懂得。";
+}
+else{
+echo"文件 $filename 不存在。。";
+}
+}
+else
+{
+echo "<form action='' method='get'>
+文件名:<input name='filename' type='text'/><br/>
+<input value='打开' type='submit'/></form>";
+}
+?><hr/><a href='http://0gan.info'>创意＆源自灵感</a>
+</div>
+</body>
+</html>
